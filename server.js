@@ -11,6 +11,7 @@ app.use('/', schoolRoutes);
 
 // Serve the static files (HTML, CSS, JS)
 app.use(express.static("public"));
+
 // to display (serve) html ( to make sure that the server is running when HOSTED)
 app.get(["/", "/api"], (req, res) => {
   try {
