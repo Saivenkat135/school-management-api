@@ -2,14 +2,14 @@ const db = require('../config/db');
 const getDistance = require('../utils/distance');
 
 exports.addSchool = (req, res) => {
-    const { name, address, latitude, longitude } = req.body;
+    const { id,name, address, latitude, longitude } = req.body;
 
-    if (!name || !address || isNaN(latitude) || isNaN(longitude)) {
+    if (!id ||!name || !address || isNaN(latitude) || isNaN(longitude)) {
         return res.status(400).json({ message: "Invalid input" });
     }
 
-    const sql = 'INSERT INTO school_db (name, address, latitude, longitude) VALUES (?, ?, ?, ?)';
-    db.query(sql, [name, address, latitude, longitude], (err, result) => {
+    const sql = 'INSERT INTO school_db (id,name, address, latitude, longitude) VALUES ( ?, ?, ?, ?, ?)';
+    db.query(sql, [id,name, address, latitude, longitude], (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
         res.status(201).json({ message: 'School added successfully', schoolId: result.insertId });
     });
