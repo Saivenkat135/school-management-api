@@ -1,40 +1,543 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SafeCyber API</title>
+    <title>School Management API</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
       body {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        min-height: 100vh;
         margin: 0;
         flex-direction: column;
-        background-color: black;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+        position: relative;
+        overflow: hidden;
+        font-family: "Titillium Web", sans-serif;
+      }
+
+      /* Animated background particles */
+      body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+          radial-gradient(2px 2px at 20px 30px, rgba(10, 217, 217, 0.3), transparent),
+          radial-gradient(2px 2px at 40px 70px, rgba(86, 255, 255, 0.2), transparent),
+          radial-gradient(1px 1px at 90px 40px, rgba(10, 217, 217, 0.4), transparent),
+          radial-gradient(1px 1px at 130px 80px, rgba(86, 255, 255, 0.3), transparent);
+        background-repeat: repeat;
+        background-size: 200px 100px;
+        animation: particleMove 20s linear infinite;
+        z-index: 0;
+      }
+
+      @keyframes particleMove {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(-200px, -100px); }
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        padding: 2rem;
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 20px;
+        border: 1px solid rgba(10, 217, 217, 0.2);
+        box-shadow: 
+          0 25px 50px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transform: translateY(0);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
       }
 
       #main-heading {
         font-family: "Titillium Web", sans-serif;
-        font-weight: 650;
+        font-weight: 700;
         font-style: normal;
-        color: rgb(10, 217, 217);
-        font-size: 5rem;
+        background: linear-gradient(135deg, #0ad9d9, #56ffff, #00cccc);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        margin-bottom: 1rem;
+        text-shadow: 0 0 30px rgba(10, 217, 217, 0.5);
+        animation: glow 3s ease-in-out infinite alternate;
+        letter-spacing: -0.02em;
       }
+
+      @keyframes glow {
+        from { 
+          filter: drop-shadow(0 0 20px rgba(10, 217, 217, 0.4));
+        }
+        to { 
+          filter: drop-shadow(0 0 40px rgba(86, 255, 255, 0.6));
+        }
+      }
+
       #para {
         font-family: "Titillium Web", sans-serif;
-        font-weight: 450;
+        font-weight: 400;
         font-style: normal;
-        color: rgb(86, 255, 255);
-        font-size: 2.3rem;
+        color: rgba(86, 255, 255, 0.9);
+        font-size: clamp(1.2rem, 4vw, 2.3rem);
+        margin-bottom: 2rem;
+        opacity: 0;
+        animation: slideUp 1s ease-out 0.5s forwards;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .status-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        background: rgba(10, 217, 217, 0.1);
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        border: 1px solid rgba(10, 217, 217, 0.3);
+        margin-top: 1rem;
+        opacity: 0;
+        animation: slideUp 1s ease-out 1s forwards;
+      }
+
+      .status-dot {
+        width: 12px;
+        height: 12px;
+        background: #0ad9d9;
+        border-radius: 50%;
+        box-shadow: 0 0 20px rgba(10, 217, 217, 0.8);
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { 
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% { 
+          transform: scale(1.2);
+          opacity: 0.7;
+        }
+      }
+
+      .status-text {
+        color: rgba(86, 255, 255, 0.9);
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .api-info {
+        margin-top: 3rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        opacity: 0;
+        animation: slideUp 1s ease-out 1.5s forwards;
+      }
+
+      .info-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        padding: 1.5rem;
+        border-radius: 15px;
+        border: 1px solid rgba(10, 217, 217, 0.15);
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .info-card:hover {
+        transform: translateY(-5px);
+        background: rgba(10, 217, 217, 0.05);
+        border-color: rgba(10, 217, 217, 0.3);
+        box-shadow: 0 15px 35px rgba(10, 217, 217, 0.2);
+      }
+
+      .info-card h3 {
+        color: #0ad9d9;
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .info-card p {
+        color: rgba(86, 255, 255, 0.7);
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .container {
+          margin: 1rem;
+          padding: 1.5rem;
+        }
+        
+        .api-info {
+          grid-template-columns: 1fr;
+          margin-top: 2rem;
+        }
+        
+        .status-indicator {
+          padding: 0.8rem 1.5rem;
+        }
+      }
+
+      /* Loading animation overlay */
+      .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+        z-index: 1000;
+        animation: fadeOut 2s ease-out 0.5s forwards;
+      }
+
+      @keyframes fadeOut {
+        to {
+          opacity: 0;
+          visibility: hidden;
+        }
       }
     </style>
   </head>
   <body>
-    <h1 id="main-heading">School management API</h1>
-    <p id="para">The Server is running and live !!</p>
+    <div class="loading-overlay"></div>
+    
+    <div class="container">
+      <h1 id="main-heading">School Management API</h1>
+      <p id="para">The Server is running and live !!</p>
+      
+      <div class="status-indicator">
+        <div class="status-dot"></div>
+        <span class="status-text">Active & Responding</span>
+      </div>
+
+      <div class="api-info">
+        <div class="info-card">
+          <h3>📚 Student Management</h3>
+          <p>Users to add new schools and retrieve a list of schools</p>
+        </div>
+        <div class="info-card">
+          <h3>For addin the schools</h3>
+          <p>"\addschools" to add schools data</p>
+          <p>{
+                "id":1,
+              "name": "gowthami School",
+              "address": "HP Road, narsapur",
+              "latitude": 18.5204,
+              "longitude": 73.8567
+            }
+          </p>
+        </div>
+        <div class="info-card">
+          <h3>To retrieve the schools data</h3>
+          <p>"/listSchools?latitude=18.5204&longitude=73.8567" to retrieve schools data</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>School Management API</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        flex-direction: column;
+        background: linear-gradient(135deg, #1a0a2e 0%, #2e1a4e 50%, #3e2e5e 100%);
+        position: relative;
+        overflow: hidden;
+        font-family: "Titillium Web", sans-serif;
+      }
+
+      /* Animated background particles */
+      body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+          radial-gradient(2px 2px at 20px 30px, rgba(147, 51, 234, 0.3), transparent),
+          radial-gradient(2px 2px at 40px 70px, rgba(168, 85, 247, 0.2), transparent),
+          radial-gradient(1px 1px at 90px 40px, rgba(147, 51, 234, 0.4), transparent),
+          radial-gradient(1px 1px at 130px 80px, rgba(168, 85, 247, 0.3), transparent);
+        background-repeat: repeat;
+        background-size: 200px 100px;
+        animation: particleMove 20s linear infinite;
+        z-index: 0;
+      }
+
+      @keyframes particleMove {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(-200px, -100px); }
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        padding: 2rem;
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 20px;
+        border: 1px solid rgba(147, 51, 234, 0.2);
+        box-shadow: 
+          0 25px 50px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transform: translateY(0);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+      }
+
+      #main-heading {
+        font-family: "Titillium Web", sans-serif;
+        font-weight: 700;
+        font-style: normal;
+        background: linear-gradient(135deg, #9333ea, #a855f7, #8b5cf6);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        margin-bottom: 1rem;
+        text-shadow: 0 0 30px rgba(147, 51, 234, 0.5);
+        animation: glow 3s ease-in-out infinite alternate;
+        letter-spacing: -0.02em;
+      }
+
+      @keyframes glow {
+        from { 
+          filter: drop-shadow(0 0 20px rgba(147, 51, 234, 0.4));
+        }
+        to { 
+          filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.6));
+        }
+      }
+
+      #para {
+        font-family: "Titillium Web", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        color: rgba(196, 154, 255, 0.9);
+        font-size: clamp(1.2rem, 4vw, 2.3rem);
+        margin-bottom: 2rem;
+        opacity: 0;
+        animation: slideUp 1s ease-out 0.5s forwards;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .status-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        background: rgba(147, 51, 234, 0.1);
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        border: 1px solid rgba(147, 51, 234, 0.3);
+        margin-top: 1rem;
+        opacity: 0;
+        animation: slideUp 1s ease-out 1s forwards;
+      }
+
+      .status-dot {
+        width: 12px;
+        height: 12px;
+        background: #9333ea;
+        border-radius: 50%;
+        box-shadow: 0 0 20px rgba(147, 51, 234, 0.8);
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { 
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% { 
+          transform: scale(1.2);
+          opacity: 0.7;
+        }
+      }
+
+      .status-text {
+        color: rgba(196, 154, 255, 0.9);
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .api-info {
+        margin-top: 3rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        opacity: 0;
+        animation: slideUp 1s ease-out 1.5s forwards;
+      }
+
+      .info-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        padding: 1.5rem;
+        border-radius: 15px;
+        border: 1px solid rgba(147, 51, 234, 0.15);
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .info-card:hover {
+        transform: translateY(-5px);
+        background: rgba(147, 51, 234, 0.05);
+        border-color: rgba(147, 51, 234, 0.3);
+        box-shadow: 0 15px 35px rgba(147, 51, 234, 0.2);
+      }
+
+      .info-card h3 {
+        color: #9333ea;
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .info-card p {
+        color: rgba(196, 154, 255, 0.7);
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .container {
+          margin: 1rem;
+          padding: 1.5rem;
+        }
+        
+        .api-info {
+          grid-template-columns: 1fr;
+          margin-top: 2rem;
+        }
+        
+        .status-indicator {
+          padding: 0.8rem 1.5rem;
+        }
+      }
+
+      /* Loading animation overlay */
+      .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #1a0a2e 0%, #2e1a4e 50%, #3e2e5e 100%);
+        z-index: 1000;
+        animation: fadeOut 2s ease-out 0.5s forwards;
+      }
+
+      @keyframes fadeOut {
+        to {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loading-overlay"></div>
+    
+    <div class="container">
+      <h1 id="main-heading">School Management API</h1>
+      <p id="para">The Server is running and live !!</p>
+      
+      <div class="status-indicator">
+        <div class="status-dot"></div>
+        <span class="status-text">Active & Responding</span>
+      </div>
+
+      <div class="api-info">
+        <div class="info-card">
+          <h3>📚 Student Management</h3>
+          <p>Users to add new schools and retrieve a list of schools</p>
+        </div>
+        <div class="info-card">
+          <h3>For addin the schools</h3>
+          <p>"\addschools" to add schools data</p>
+          <p>{
+                "id":1,
+              "name": "gowthami School",
+              "address": "HP Road, narsapur",
+              "latitude": 18.5204,
+              "longitude": 73.8567
+            }
+          </p>
+        </div>
+        <div class="info-card">
+          <h3>To retrieve the schools data</h3>
+          <p>"/listSchools?latitude=18.5204&longitude=73.8567" to retrieve schools data</p>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
