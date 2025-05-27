@@ -24,6 +24,7 @@ This project implements a simple school management API using Node.js, Express, a
 ## 📬 API Endpoints
 
 ### POST /addSchool
+### GET /listschools
 
 Add a new school.
 
@@ -35,3 +36,23 @@ Add a new school.
   "latitude": 28.61,
   "longitude": 77.21
 }
+
+
+**Project structure**
+
+            config/
+                └── db.js
+            controllers/
+                └── schoolController.js
+            public/
+                └── index.html
+            routes/
+                └── schoolRoutes.js
+            utils/
+                └── distance.js
+            .env
+            .gitignore
+            package-lock.json
+            package.json
+            README.md
+            server.js
